@@ -24,5 +24,13 @@ Builder.prototype.makeTable = function(schemaObject, callback) {
 	}
 };
 
+Builder.prototype.createTable = function(schemaObject, connectionOptions, callback) {
+	if(this.dbtype === "mysql") {
+		var mysqlAdapter = new MySQLAdapter(schemaObject);
+		mysqlAdapter.createTable(function(err, result){
+			mysqlAdapter.executeCreateTable(result, connectionOptions, callback);
+		});
+	}
+};
 
 module.exports = Builder;

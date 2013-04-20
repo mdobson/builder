@@ -51,5 +51,43 @@ describe("Builder#makeTable", function(){
 			done();
 		})
 	});
+
+	it("creates a table", function(done){
+		var buildMysql = new Builder("./test/demo_tbl.csv", "csv", "mysql");
+		var schema = {
+			name:"demographics",
+			fields:[
+				{
+					"name":"age",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"gender",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"ethnicity",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"race",
+					"type":"varchar(100)"
+				}
+			]
+		}
+
+		var options = {
+			host:process.env.DB,
+			port:process.env.DBPORT,
+			password:process.env.DBPASS,
+			user:process.env.DBUSER,
+			database:process.env.DBNAME
+		}
+
+		buildMysql.createTable(schema, options, function(err, result){
+			assert.equal(true, result);
+			done();
+		});
+	});
 });
 
