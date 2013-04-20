@@ -22,6 +22,54 @@ describe("Builder#read", function(){
 	});
 });
 
+describe("Builder#createAndInsert", function(){
+	it("Creates a table with a defined schema and seeds it with data", function(done){
+		var options = {
+			host:process.env.DB,
+			port:process.env.DBPORT,
+			password:process.env.DBPASS,
+			user:process.env.DBUSER,
+			database:process.env.DBNAME
+		}
+
+		var buildcsv = new Builder("./test/demo_tbl.csv", "csv", "mysql");
+		var schemaObject = {
+			name:"formmetadata",
+			fields:[
+				{
+					"name":"name",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"stored_in",
+					"type":"varchar (100)"
+				},
+				{
+					"name":"id",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"data_type",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"type",
+					"type":"varchar(100)"
+				},
+				{
+					"name":"defaults",
+					"type":"varchar(100)"
+				}
+			]
+		}
+		var schema = ["name", "stored_in", "data_type", "defaults", "type"];
+		buildcsv.createAndInsert(schema, schemaObject, options, function(err, result){
+			assert.equal(true, result);
+			done();
+		});
+	});
+});
+
 describe("Builder#makeTable", function(){
 	it("returns a proper create statement for mysql", function(done){
 		var buildMysql = new Builder("./test/demo_tbl.csv", "csv", "mysql");

@@ -1,7 +1,17 @@
 var utils = require("util"),
-	mysql = require("mysql");
+	mysql = require("mysql"),
+	async = require("async");
 
-function MySQLAdapter(schema){
+function MySQLAdapter(schema, options){
+	if(options) {
+		this.connection = mysql.createConnection({
+		  host     : options.host,
+		  user     : options.user,
+		  port	   : options.port,
+		  password : options.password,
+		  database : options.database
+		});
+	}
 	this.schema = schema;
 }
 
@@ -18,30 +28,53 @@ MySQLAdapter.prototype.createTable = function(callback) {
 	callback(null, createTable);
 };
 
-MySQLAdapter.prototype.executeCreateTable = function(query, options, callback) {
-	var connection = mysql.createConnection({
-	  host     : options.host,
-	  user     : options.user,
-	  port	   : options.port,
-	  password : options.password,
-	  database : options.database
-	});
+MySQLAdapter.prototype.executeCreateTable = function(query, callback) {
+	var self = this;
 
-	connection.connect(function(err){
-		if(err){
+	self.connection.query(query, function(err, rows){
+		if(err) {
 			callback(err);
 		} else {
-			connection.query(query, function(err, rows){
-				if(err) {
-					callback(err);
-				} else {
-					connection.end();
-					callback(null, true);
-				}
-			});
+			callback(null, true);
 		}
-
 	});
+};
+
+MySQLAdapter.prototype.insertRows = function(tableName, rows, callback) {
+	var transformedRowContexts = [];
+	var self = this;
+	rows.forEach(function(row){
+		transformedRowContexts.push({tableName:tableName, row:row, self:self});
+	})
+	async.each(transformedRowContexts, this.insert, function(err){
+    	if(err) {
+    		callback(err);
+    	} else {
+    		callback(null, true);
+    	}
+	});
+	
+};
+
+MySQLAdapter.prototype.insert = function(options, callback) {
+	var columns = Object.keys(options.row);
+	var values = [];
+	columns.forEach(function(column){
+		values.push("\""+options.row[column]+"\"");
+		column = "\""+column+"\"";
+	});
+	var query = utils.format("INSERT INTO %s (%s) VALUES (%s)", options.tableName, columns.join(), values.join());
+	options.self.connection.query(query, function(err, rows){
+		if(err) {
+			callback(err);
+		} else {
+			callback(null, true);
+		}
+	});
+};
+
+MySQLAdapter.prototype.close = function() {
+	this.connection.end();
 };
 
 module.exports = MySQLAdapter;

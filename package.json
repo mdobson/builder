@@ -1,6 +1,6 @@
 {
   "author": "Matt Dobson <mdobson4@gmail.com>",
-  "name": "builder",
+  "name": "db-builder",
   "version": "0.0.1",
   "description": "Simple devops database build toolkit",
   "main": "index.js",
@@ -14,10 +14,11 @@
   "dependencies":{
     "mysql":"2.0.0-alpha7",
     "pipeworks":"1.1.0",
-    "fast-csv":"0.0.1"
+    "fast-csv":"0.0.1",
+    "async":"0.2.7"
   },
   "scripts": {
-    "test": "mocha -R spec --timeout 10000"
+    "test": "mocha -R spec --timeout 1000000"
   },
   "devDependencies": {
     "mocha": "~1.9.0"
