@@ -1,0 +1,1 @@
+age,demographic,varchar,,text,age,demographicgender,demographic,varchar,"male,female",dropdown,gender,demographicethnicity,demographic,varchar,"hispanic or latino, non-hispanic or non-latino",dropdown,ethnicity,demographicrace,demographic,varchar,"african american,hawaiian/pacific islander,asian,caucasian,american indian/alaska native,other",dropdown,race,demographic
