@@ -1,4 +1,5 @@
 {
+  "author": "Matt Dobson <mdobson4@gmail.com>",
   "name": "builder",
   "version": "0.0.1",
   "description": "Simple devops database build toolkit",
