@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Simple devops database build toolkit",
   "main": "index.js",
-  "repository": "",
+  "repository": "https://github.com/mdobson/builder.git",
   "keywords": [
     "mysql",
     "builder",
